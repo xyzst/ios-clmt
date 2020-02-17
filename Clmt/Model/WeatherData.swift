@@ -10,7 +10,7 @@
 
 import Foundation
 
-struct WeatherData: Decodable {
+struct WeatherData: Decodable { // Can use "Codable" protocol for serialization/deserialization
     let name: String
     let main: Main
     let weather: [Weather]

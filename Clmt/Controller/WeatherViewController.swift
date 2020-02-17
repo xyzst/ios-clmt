@@ -8,8 +8,8 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController, UITextFieldDelegate {
-
+class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherDelegate {
+    
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
@@ -19,10 +19,10 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         search.delegate = self // delegates used to notify other elements (eg, user end editing..)
+        weatherManager.delegate = self
     }
-
+    
     @IBAction func search(_ sender: UIButton) {
         // send api request to weather api
         print(search.text!)
@@ -52,6 +52,14 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
             weatherManager.fetchBy(city: c)
         }
         search.text = "" // reset the text field after submission
+    }
+    
+    func didWeatherUpdate(weather: WeatherModel) {
+        DispatchQueue.main.async {
+            self.conditionImageView.image = UIImage(systemName: weather.weatherCondition)
+            self.temperatureLabel.text = weather.displayTemperature
+            self.cityLabel.text = weather.city
+        }
     }
 }
 

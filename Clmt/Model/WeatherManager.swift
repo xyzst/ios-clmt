@@ -9,6 +9,8 @@
 import Foundation
 
 struct WeatherManager {
+    var delegate: WeatherDelegate?
+    
     var url = "https://api.openweathermap.org/data/2.5/weather?appid=\("YOUR_API_KEY_HERE")&units=imperial" // !!! DO NOT COMMIT THIS FILE WITH API KEY !!!
     
     func fetchBy(city: String) {
@@ -26,14 +28,16 @@ struct WeatherManager {
                 }
                 
                 if let d = data {
-                    self.parse(weather: d)
+                    if let w = self.parse(weather: d) {
+                        self.delegate?.didWeatherUpdate(weather: w)
+                    }
                 }
             }
             task.resume()
         }
     }
     
-    func parse(weather: Data) {
+    func parse(weather: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
         do {
             let decoded = try decoder.decode(WeatherData.self, from: weather)
@@ -43,10 +47,10 @@ struct WeatherManager {
                 temperature: decoded.main.temp
             )
             
-            print(w.weatherCondition)
-            print(w.displayTemperature)
+            return w
         } catch {
             print(error)
+            return nil
         }
     }
 }

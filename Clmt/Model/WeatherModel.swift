@@ -9,6 +9,7 @@
 import Foundation
 
 struct WeatherModel {
+    
     // MARK: Stored Properties
     let weatherId: Int
     let city: String
