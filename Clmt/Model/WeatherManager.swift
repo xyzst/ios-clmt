@@ -18,6 +18,12 @@ struct WeatherManager {
         req(u: fqurl)
     }
     
+    func fetchBy(coords: [(lat: Double, lon: Double)]) {
+        coords
+            .map({c in "\(url)&lat=\(c.lat)&lon=\(c.lon)"})
+            .forEach({s in req(u: s)})
+    }
+    
     func req(u: String) {
         if let url = URL(string: u) {
             let session = URLSession(configuration: .default)
