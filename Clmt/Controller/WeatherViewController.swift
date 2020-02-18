@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherDelegate {
+class WeatherViewController: UIViewController {
     
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
@@ -28,8 +28,12 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherDeleg
         print(search.text!)
         search.endEditing(true)
     }
-    
-    // MARK: Delegates
+
+}
+
+// MARK: - UITextFieldDelegate
+
+extension WeatherViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // send api request to weather api ...
@@ -38,7 +42,6 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherDeleg
     }
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        // perform some validation here
         if textField.text != "" {
             return true
         }
@@ -53,7 +56,11 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherDeleg
         }
         search.text = "" // reset the text field after submission
     }
-    
+}
+
+// MARK: - WeatherDelegate
+
+extension WeatherViewController: WeatherDelegate {
     func didWeatherUpdate(weather: WeatherModel) {
         DispatchQueue.main.async {
             self.conditionImageView.image = UIImage(systemName: weather.weatherCondition)
@@ -62,4 +69,3 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherDeleg
         }
     }
 }
-
